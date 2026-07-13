@@ -43,7 +43,7 @@ interests:
   - Reinforcement Learning
 
 education:
-  - degree: BSc Electrical Engineering
+  - degree: B.S. Electrical Engineering
     institution: National Taiwan University
     icon: orgs/ntu
     start: 2024-09-01
@@ -60,8 +60,8 @@ experience:
   - role: Research Intern
     org: Learning Robots
     icon: orgs/learning-robots
-    start: 2026-06-01
-    end: 2026-09-30
+    start: 2026-06-15
+    end: 2026-09-04
     summary: |
       Working on alphai-v2.
   - role: Member
