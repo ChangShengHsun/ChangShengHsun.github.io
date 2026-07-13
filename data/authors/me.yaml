@@ -47,6 +47,12 @@ education:
     institution: National Taiwan University
     start: 2024-09-01
     end: 2028-06-30  # Expected graduation
+  - degree: Math and Science Gifted Class
+    institution: Taipei Municipal Jianguo High School
+    start: 2021-09-01
+    end: 2024-06-30
+    summary: |
+      Graduated ranked 1st in the school.
 
 experience:
   - role: Research Intern
