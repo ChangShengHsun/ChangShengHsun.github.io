@@ -45,10 +45,12 @@ interests:
 education:
   - degree: BSc Electrical Engineering
     institution: National Taiwan University
+    icon: orgs/ntu
     start: 2024-09-01
     end: 2028-06-30  # Expected graduation
   - degree: Math and Science Gifted Class
     institution: Taipei Municipal Jianguo High School
+    icon: orgs/ckhs
     start: 2021-09-01
     end: 2024-06-30
     summary: |
@@ -57,11 +59,13 @@ education:
 experience:
   - role: Research Intern
     org: Learning Robots
+    icon: orgs/learning-robots
     start: 2026-06-01
     end: 2026-09-30
     summary: |
       Working on alphai-v2.
   - role: Member
     org: NTU Robot Learning Lab
+    icon: orgs/ntu-rll
     start: 2025-07-01
     # Ongoing — no end date
