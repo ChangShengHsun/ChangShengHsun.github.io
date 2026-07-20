@@ -1,7 +1,7 @@
 ---
 title: 'KPOP 舞台演出'
-summary: '大二參加 KPOP 舞蹈演出。'  # TODO: 補充演出名稱與心得
-date: 2026-05-01  # TODO: set to the actual performance date
+summary: '大二參與演出，與多名系上優秀舞者共同登台，完成流暢度高，畫面優美的表演' 
+date: 2026-03-23
 
 categories:
   - Performance
@@ -9,9 +9,6 @@ categories:
 authors:
   - me
 ---
-
-<!-- TODO: 寫下演出經過、練習過程與心得；照片放在這個資料夾內，
-     封面圖命名為 featured.jpg -->
 
 大二 KPOP 舞蹈演出。
 

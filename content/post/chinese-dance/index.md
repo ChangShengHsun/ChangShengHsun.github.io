@@ -1,7 +1,7 @@
 ---
 title: '中國舞演出'
-summary: '大二參加中國舞演出。'  # TODO: 補充演出名稱與心得
-date: 2026-04-01  # TODO: set to the actual performance date
+summary: '在 2026台大電機之夜中擔任共同負責人，成功打破傳統框架，從零到一開創全新中國舞舞風。凝聚並帶領 10 人團隊完成高演出，最終贏得全場高度迴響'  
+date: 2026-03-23  
 
 categories:
   - Performance

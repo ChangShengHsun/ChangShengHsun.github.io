@@ -1,17 +1,14 @@
 ---
 title: '電機之夜總召'
-summary: '擔任電機之夜總召。'  # TODO: 補充屆數、規模與心得
-date: 2026-05-15  # TODO: set to the actual event date
+summary: '擔任電機之夜總召，統籌 10 個以上節目流程順利推進。高效跨部門溝通，協同逾百人演出團隊與數十人幕後團隊，成功完成大型公演。' 
+date: 2027-03-23  
 
 categories:
   - Leadership
+  - Performance
 
 authors:
   - me
 ---
 
-<!-- TODO: 寫下籌備過程、團隊規模、遇到的挑戰與成果 -->
-
-擔任電機之夜總召，統籌整場晚會的籌備與演出。
-
-<!--more-->
+TODO:寫心得

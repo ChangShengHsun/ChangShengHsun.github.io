@@ -1,7 +1,7 @@
 ---
 title: '泳渡日月潭'
-summary: '完成日月潭萬人泳渡。'  # TODO: 補充年份與心得
-date: 2025-09-01  # TODO: set to the actual swim date
+summary: '完成日月潭萬人泳渡。共3.3公里，於3小時內完賽' 
+date: 2025-09-15  
 
 categories:
   - Sports
