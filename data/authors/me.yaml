@@ -35,9 +35,6 @@ links:
     url: https://www.facebook.com/zhang.sheng.xun.825177/
   - icon: brands/instagram
     url: https://instagram.com/shenghsun_chang
-  - icon: academicons/cv
-    url: uploads/resume.pdf
-    label: Download CV
 
 interests:
   - Robot Learning

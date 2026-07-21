@@ -10,6 +10,9 @@ sections:
       # Choose a user profile to display (a folder/file name within `data/authors/`)
       username: me
       text: ''
+      button:
+        text: Download CV
+        url: uploads/resume.pdf
     design:
       # Gradient mesh background automatically adapts to the selected theme colors
       background:
