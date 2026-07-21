@@ -1,0 +1,12 @@
+{{/* Overrides the Blox default: a single-item collection gets a
+     max-w-[500px] container, but upstream still splits the grid into
+     `columns`, squeezing the lone card into half of that width.
+     Drop the column class entirely so the grid falls back to its default
+     single column and the card fills the narrow container.
+     (Emitting md:grid-cols-1 would look right but only by accident —
+     Tailwind never generates that rule, so nothing would apply.) */}}
+{{ $columns := .config.columns | default 2 }}
+{{ $len := .config.len | default 2 }}
+{{/* NOTE: dynamic `md:grid-cols-{{$columns}}` class requires Tailwind exception */}}
+<div class="container px-8 mx-auto xl:px-5 py-5 lg:py-8 {{ if eq $len 1 }}max-w-[500px] justify-center{{else}}max-w-screen-lg {{end}}">
+  <div class="grid gap-10 {{ if ne $len 1 }}md:grid-cols-{{$columns}} {{ end }}lg:gap-10">

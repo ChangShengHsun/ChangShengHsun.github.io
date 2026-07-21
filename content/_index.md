@@ -47,7 +47,7 @@ sections:
           - post
     design:
       view: article-grid
-      columns: 3
+      columns: 2
 
   # Selected projects
   - block: collection
