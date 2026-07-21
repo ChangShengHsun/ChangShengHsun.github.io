@@ -95,21 +95,3 @@ by itself. Separating "novel" from "merely risky" is what buys the 7.4×.
 The project placed 3rd among 30 teams, most of them graduate students, and the
 work has been accepted to IEEE Potentials.
 
-## What I would do differently
-
-The method leans entirely on the Success Q-function being smooth enough to
-follow. PointMaze is friendly that way. A sparser-reward or more discontinuous
-environment would hand recovery a gradient pointing somewhere useless, and
-nothing in the current design notices when that happens.
-
-Two limits I would attack next. Gradient ascent runs at every risky timestep,
-which is cheap in a 2-D action space and gets expensive quickly in a
-high-dimensional or real-time one — the recovery budget should adapt rather than
-stay fixed. And the whole framework assumes risky states are locally
-recoverable; a failure that is irreversible, or one that needs long-horizon
-replanning instead of a local correction, still has to fall back to the expert,
-and we never tested a task like that.
-
-If I ran the project again I would validate on more than one environment before
-tuning anything. A single 2-D navigation task is a proof of concept, and that is
-the honest limit of what our numbers support.

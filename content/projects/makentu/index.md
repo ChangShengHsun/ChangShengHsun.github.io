@@ -54,7 +54,7 @@ And the subsystems that make it more than a renderer:
 | **Four-screen cabin** | Each screen runs the same app with `?role=driver / passenger / left / right`. The driver publishes state snapshots to a small WebSocket relay that fans them out unparsed; each role applies its own camera offset — passenger 0.45 m inboard of the right door, side windows yawed ±90° — and keeps its own mouse-look on top, so a passenger can still turn their head independently. |
 | **Physical steering wheel** | You drive it with an actual wheel. Steering angle comes off a six-axis IMU (three-axis accelerometer plus gyroscope) mounted on the wheel itself, so the rotation is read directly from how the wheel moves — no shaft encoder or mechanical end-stops to fabricate in three days. An Arduino Nano packages the reading as one JSON line per packet at 115200 baud, roughly 20 packets a second, which the browser reads through Web Serial. Every value is clamped on arrival so a noisy reading cannot push the vehicle physics past its own caps, and the 60 fps render interpolates between packets rather than stepping. |
 
-![Demoing the simulator to the judges with hands on the laser-cut control rig](judging-demo.jpg "Demoing to the judges — hands on the laser-cut control rig, the simulator running on the screen in front of it.")
+![Demoing the simulator to the judges with hands on the laser-cut control rig](judging-demo.jpg "Demoing to the judges — hands on the laser-cut control rig, the simulator running on the screen in front of me.")
 
 ## My role
 
