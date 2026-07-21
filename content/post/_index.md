@@ -15,7 +15,7 @@ sections:
         category: Performance
     design:
       view: article-grid
-      columns: 3
+      columns: 2
 
   - block: collection
     id: sports
@@ -29,7 +29,7 @@ sections:
         category: Sports
     design:
       view: article-grid
-      columns: 3
+      columns: 2
 
   - block: collection
     id: leadership
@@ -43,5 +43,19 @@ sections:
         category: Leadership
     design:
       view: article-grid
-      columns: 3
+      columns: 2
+
+  - block: collection
+    id: activities
+    content:
+      title: Activities
+      text: ''
+      count: 0
+      filters:
+        folders:
+          - post
+        category: Activities
+    design:
+      view: article-grid
+      columns: 2
 ---
