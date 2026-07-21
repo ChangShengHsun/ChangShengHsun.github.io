@@ -1,6 +1,6 @@
 ---
 title: RecoveryDAgger
-summary: 'Led a 4-person team building RecoveryDAgger, a query-efficient imitation learning algorithm that lets the agent recover from risky states on its own instead of calling the expert. Designed the expert policy and the whole training pipeline single-handedly in PyTorch and SB3. Placed 3rd among 30 teams, most of them graduate students; accepted to IEEE Potentials.'
+summary: '領導 4 人團隊實現Imitation Learning演算法 RecoveryDAgger，顯著減少專家查詢次數。利用 PyTorch 與 SB3 獨力設計專家策略與訓練管線，於 30 支多為研究生的隊伍中斬獲季軍，成果已獲 IEEE Potentials 錄取。'
 date: 2025-09-01
 date_end: 2025-12-31
 
@@ -46,28 +46,70 @@ situations the agent could have dug itself out of.
 ## My role
 
 I led a four-person team and built the expert policy and the training pipeline
-myself, in PyTorch and Stable-Baselines3.
+myself, in PyTorch and Stable-Baselines3. The expert is a rule-based controller
+that steers toward the goal from the current state — deterministic, 100% success
+on the task — and it generates the 100-trajectory offline dataset every method
+in the paper starts from. Behaviour cloning on that dataset lands at roughly 26%
+success, which is exactly the gap online training has to close.
 
-<!-- TODO(Ivan): 這裡補「最難的一個技術決策」。
-     例如：Success Q-function 為什麼用梯度上升而不是別的做法？
-     中途有沒有試過什麼行不通、後來換掉的？
-     這段最能看出你的判斷力，比列技術棧有價值。 -->
+The design decision I care most about is how recovery actually produces an
+action. PointMaze has a continuous action space (forces along x and y), so the
+obvious version of recovery — enumerate candidate actions, take the arg max of
+the Success Q-function — is not available. We instead start from the action the
+imitation policy already proposed and run a few steps of gradient ascent on the
+Success Q-function with respect to the action, projecting back into the valid
+range after each step. Recovery is a local correction of the policy's own
+intent, not a second controller fighting it.
+
+The other decision was to stop trusting a single Q-network. One learned Success
+Q is only an approximation, and recovery follows its gradient, so its errors get
+amplified rather than averaged out. We trained an ensemble instead: the ensemble
+mean defines risk, the ensemble variance defines novelty, and the recovery
+objective subtracts a penalty λ·Var(Q) so recovery never climbs toward states
+the ensemble disagrees about. One family of networks ends up serving all three
+roles — risk detector, novelty detector, and recovery direction.
 
 ## Results
 
-Evaluated on the PointMaze navigation task against ThriftyDAgger, a strong
-query-efficient baseline. RecoveryDAgger cut the number of expert queries
-substantially while keeping the success rate comparable.
+Evaluated on a four-room PointMaze navigation task against ThriftyDAgger, the
+standard query-efficient baseline. Every method starts from the same
+behaviour-cloned policy.
 
-<!-- TODO(Ivan): 補具體數字，說服力差很多。
-     查詢次數減少百分之多少？成功率各是多少？
-     這些在你的 Report.pdf 裡，翻出來填進去。 -->
+| Method | Expert queries | Recovery queries | Success rate |
+| --- | --- | --- | --- |
+| Behaviour cloning | — | — | 0.26 |
+| ThriftyDAgger (baseline) | 20,048 | — | 0.81 |
+| Single-Q recovery (ours) | 2,504 | 9,232 | 0.86 |
+| Ensemble-Q recovery (ours) | 2,693 | 9,296 | 0.88 |
+
+Ensemble-Q recovery ends up more accurate than the baseline while querying the
+expert **7.4× less often**. Partway through training the gap is even wider: both
+recovery variants reach ~0.7 success after about 2k expert queries, where
+ThriftyDAgger needs roughly 20k to get to the same place.
+
+The interesting part is *where* the savings come from. Most of what a risk-gated
+method spends its query budget on is not genuinely unfamiliar — it is
+recoverable: local deviations near a doorway or a wall that the agent could fix
+by itself. Separating "novel" from "merely risky" is what buys the 7.4×.
 
 The project placed 3rd among 30 teams, most of them graduate students, and the
 work has been accepted to IEEE Potentials.
 
 ## What I would do differently
 
-<!-- TODO(Ivan): 補限制與反思。方法在什麼情況下會失效？
-     只在 PointMaze 上驗證過，換到更高維度的任務會遇到什麼？
-     多數人不寫這段，寫了最顯成熟度。 -->
+The method leans entirely on the Success Q-function being smooth enough to
+follow. PointMaze is friendly that way. A sparser-reward or more discontinuous
+environment would hand recovery a gradient pointing somewhere useless, and
+nothing in the current design notices when that happens.
+
+Two limits I would attack next. Gradient ascent runs at every risky timestep,
+which is cheap in a 2-D action space and gets expensive quickly in a
+high-dimensional or real-time one — the recovery budget should adapt rather than
+stay fixed. And the whole framework assumes risky states are locally
+recoverable; a failure that is irreversible, or one that needs long-horizon
+replanning instead of a local correction, still has to fall back to the expert,
+and we never tested a task like that.
+
+If I ran the project again I would validate on more than one environment before
+tuning anything. A single 2-D navigation task is a proof of concept, and that is
+the honest limit of what our numbers support.
