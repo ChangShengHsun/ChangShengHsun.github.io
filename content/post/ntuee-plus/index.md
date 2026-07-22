@@ -4,6 +4,8 @@ summary: '歷任 NTUEE 系學會 EE+ 成員與社長，前期協助統合產學�
 date: 2024-09-01
 date_end: 2027-06-30
 
+draft: true  # 隱藏：內容待補，之後寫完再改回 false（或刪掉這行）
+
 categories:
   - Leadership
 

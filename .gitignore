@@ -45,6 +45,10 @@ node_modules/
 pagefind/
 static/pagefind/
 
+# StatiCrypt generated artifacts (salt config + fallback output dir)
+.staticrypt.json
+encrypted/
+
 # ============================================================================
 # Operating System
 # ============================================================================

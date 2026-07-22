@@ -24,16 +24,16 @@ sections:
         size: medium
         shape: circle
 
-  # # Latest reading notes (讀書心得)
+  # # Latest reflections (人生反思)
   # - block: collection
-  #   id: reading-notes
+  #   id: reflection
   #   content:
-  #     title: Reading Notes
+  #     title: Reflection
   #     text: ''
   #     count: 3
   #     filters:
   #       folders:
-  #         - reading-notes
+  #         - reflection
   #   design:
   #     view: article-grid
   #     columns: 3

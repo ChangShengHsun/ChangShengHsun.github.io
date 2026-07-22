@@ -12,10 +12,20 @@
     
     echo "=== Running Hugo build ==="
     hugo --gc --minify -b $URL --logLevel debug --printI18nWarnings --printPathWarnings
-    
+
+    echo "=== Encrypting private reflection pages (must run BEFORE pagefind) ==="
+    if [ -d public/reflection ]; then
+      if [ -z "$STATICRYPT_PASSWORD" ]; then
+        echo "ERROR: public/reflection exists but STATICRYPT_PASSWORD is not set — refusing to deploy private pages unencrypted." && exit 1
+      fi
+      pnpm exec staticrypt public/reflection -r -d public --short
+    else
+      echo "No public/reflection directory yet, skipping encryption."
+    fi
+
     echo "=== Running Pagefind indexing ==="
     pnpm run pagefind
-    
+
     echo "=== Build completed successfully ==="
   """
   publish = "public"
@@ -42,6 +52,10 @@
     echo "Deploy URL: $DEPLOY_PRIME_URL"
     pnpm install --verbose --no-frozen-lockfile
     hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL --logLevel debug --printI18nWarnings --printPathWarnings
+    if [ -d public/reflection ]; then
+      if [ -z "$STATICRYPT_PASSWORD" ]; then echo "ERROR: STATICRYPT_PASSWORD not set" && exit 1; fi
+      pnpm exec staticrypt public/reflection -r -d public --short
+    fi
     pnpm run pagefind
   """
 
@@ -52,6 +66,10 @@
     echo "Deploy URL: $DEPLOY_PRIME_URL"
     pnpm install --verbose --no-frozen-lockfile
     hugo --gc --minify -b $DEPLOY_PRIME_URL --logLevel debug --printI18nWarnings --printPathWarnings
+    if [ -d public/reflection ]; then
+      if [ -z "$STATICRYPT_PASSWORD" ]; then echo "ERROR: STATICRYPT_PASSWORD not set" && exit 1; fi
+      pnpm exec staticrypt public/reflection -r -d public --short
+    fi
     pnpm run pagefind
   """
 
