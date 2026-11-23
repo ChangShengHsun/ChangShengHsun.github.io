@@ -14,8 +14,8 @@ status:
 role: Electrical Engineering Undergraduate
 bio: |
   Third-year Electrical Engineering student at National Taiwan University
-  working on learning-based robotics. Currently a research intern at
-  Learning Robots (Paris-Saclay) and a member of the NTU Robot Learning Lab.
+  working on learning-based robotics. Member of the NTU Robot Learning Lab,
+  previously a software engineering intern at Learning Robots (Paris-Saclay).
 
 affiliations:
   - name: National Taiwan University
@@ -57,13 +57,15 @@ education:
       Graduated ranked 1st in the school.
 
 experience:
-  - role: Research Intern
+  - role: Software Engineering Intern
     org: Learning Robots
     icon: orgs/learning-robots
     start: 2026-06-15
     end: 2026-09-04
     summary: |
-      Working on alphai-v2.
+      Integrated the company's software with its new AlphAI v2 robot, then
+      extended it to Thymio 3 (over Bluetooth Low Energy), LEGO SPIKE Prime
+      and an industrial robotic arm.
   - role: Member
     org: NTU Robot Learning Lab
     icon: orgs/ntu-rll
