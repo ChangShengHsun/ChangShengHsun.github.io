@@ -27,8 +27,10 @@
     font: 16px/1.7 var(--term-font);
   }
   .term-line { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 1.7em; }
-  /* Logo rows: tight line height so the outline joins up, and no wrapping. */
-  .term-art { white-space: pre; line-height: 1.15; min-height: 0; color: #4d8dff; }
+  /* Banner rows (logo + info beside it): tight line height so the outline joins
+     up. A row wider than the window is cut short, since wrapping would tear the logo. */
+  .term-art { white-space: pre; line-height: 1.15; min-height: 0; overflow-x: clip; text-overflow: ellipsis; }
+  .term-logo, .term-key { color: #4d8dff; }
   #term a { color: #58a6ff; text-decoration: underline; }
   #term button { all: unset; color: #7ee787; cursor: pointer; text-decoration: underline dotted; }
   #term a:hover, #term button:hover { color: #fff; }

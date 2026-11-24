@@ -54,16 +54,51 @@
     '   \\_________________________/',
   ];
 
+  // Widest logo row plus the gap before the info column beside it.
+  var INFO_COLUMN = 36;
+
   // A line is an array of segments: a plain string, {text, href} for a link,
-  // {cmd} for a clickable command, or {art} for a row of the logo.
+  // {cmd} for a clickable command, {art} for a row of the logo, or {key} for
+  // the label of an info row.
   function link(text, href) { return { text: text, href: href }; }
 
+  function contactLinks(data) {
+    var segments = [];
+    data.links.forEach(function (item, index) {
+      if (index) segments.push('  ');
+      segments.push(link(item.label, item.url));
+    });
+    return segments;
+  }
+
+  // The info column beside the logo, laid out like the neofetch tool's summary.
+  function profile(data) {
+    var school = data.education[0];
+    var rows = [[data.name], ['-'.repeat(data.name.length)], [{ key: 'Role: ' }, data.role]];
+    if (school) rows.push([{ key: 'School: ' }, school.place], [{ key: 'Degree: ' }, school.title]);
+    data.interests.forEach(function (interest, index) {
+      rows.push([index ? ' '.repeat('Interests: '.length) : { key: 'Interests: ' }, interest]);
+    });
+    rows.push([{ key: 'Projects: ' }, { cmd: 'projects', label: String(data.projects.length) }]);
+    rows.push([{ key: 'Posts: ' }, { cmd: 'posts', label: String(data.posts.length) }]);
+    if (data.links.length) rows.push([{ key: 'Contact: ' }].concat(contactLinks(data)));
+    return rows;
+  }
+
   function welcome(data) {
+    var info = profile(data);
+    // Centre the info against the logo; if it is taller, the rows carry on below the logo.
+    var first = Math.max(0, Math.floor((LOGO.length - info.length) / 2));
+    var banner = [];
+    for (var row = 0; row < Math.max(LOGO.length, info.length); row++) {
+      var art = LOGO[row] || '';
+      banner.push([{ art: art }, ' '.repeat(INFO_COLUMN - art.length)].concat(info[row - first] || []));
+    }
     var shortcuts = ['  '];
     ['help', 'about', 'experience', 'projects', 'posts', 'cv'].forEach(function (name) {
       shortcuts.push({ cmd: name }, '  ');
     });
-    return LOGO.map(function (row) { return [{ art: row }]; }).concat([
+    return banner.concat([
       [],
       ['Welcome to ' + data.name + "'s website (terminal mode)."],
       ['Type a command and press Enter, or click one:'],
@@ -120,14 +155,7 @@
       case 'about': {
         var lines = [[data.name + ' — ' + data.role], [data.bio]];
         if (data.interests.length) lines.push(['Interests: ' + data.interests.join(', ')]);
-        if (data.links.length) {
-          var contact = ['Contact: '];
-          data.links.forEach(function (item, index) {
-            if (index) contact.push('  ');
-            contact.push(link(item.label, item.url));
-          });
-          lines.push(contact);
-        }
+        if (data.links.length) lines.push(['Contact: '].concat(contactLinks(data)));
         return { lines: lines };
       }
       case 'experience': {
@@ -227,9 +255,11 @@
         var node;
         if (typeof segment === 'string') {
           node = document.createTextNode(segment);
-        } else if (segment.art) {
-          row.classList.add('term-art');
-          node = document.createTextNode(segment.art);
+        } else if ('art' in segment || segment.key) {
+          node = document.createElement('span');
+          node.className = segment.key ? 'term-key' : 'term-logo';
+          node.textContent = segment.key || segment.art;
+          if (!segment.key) row.classList.add('term-art');
         } else if (segment.cmd) {
           node = document.createElement('button');
           node.type = 'button';

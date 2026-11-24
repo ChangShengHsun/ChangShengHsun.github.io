@@ -22,7 +22,7 @@ const empty = { ...data, interests: [], links: [], experience: [], education: []
 
 // Flatten a result to plain text so assertions do not depend on segment layout.
 const text = (lines) =>
-  lines.map((line) => line.map((seg) => (typeof seg === 'string' ? seg : seg.text || seg.label || seg.cmd || seg.art)).join('')).join('\n');
+  lines.map((line) => line.map((seg) => (typeof seg === 'string' ? seg : seg.text || seg.label || seg.cmd || seg.key || seg.art)).join('')).join('\n');
 const hrefs = (lines) => lines.flat().filter((seg) => seg.href).map((seg) => seg.href);
 const commands = (lines) => lines.flat().filter((seg) => seg.cmd).map((seg) => seg.cmd);
 
@@ -53,6 +53,40 @@ test('logo is a closed, symmetric, ASCII-only octagon', () => {
   }
   assert.equal(art.at(-1 - 13), art[0]);
   assert.match(text(run('welcome', data).lines), /##########   ##########/);
+});
+
+// The rows of the welcome banner (logo + info), as text with trailing spaces removed.
+const banner = (site) => {
+  const lines = welcome(site);
+  return text(lines.slice(0, lines.findIndex((line) => !line.length))).split('\n').map((row) => row.trimEnd());
+};
+
+test('welcome shows the profile beside the logo, neofetch style', () => {
+  assert.deepEqual(
+    banner(data).map((row) => row.slice(36)).filter(Boolean),
+    ['Test Person', '-----------', 'Role: Student', 'School: Test University', 'Degree: B.S. Testing',
+      'Interests: Robots', 'Projects: 2', 'Posts: 1', 'Contact: github']
+  );
+  // Nine info rows centred against the fourteen logo rows start on the third row.
+  assert.equal(banner(data).length, 14);
+  assert.equal(banner(data)[2].slice(36), 'Test Person');
+  const lines = welcome(data);
+  assert.ok(hrefs(lines).includes('https://example.com/gh'));
+  // The counts are clickable and run the matching command.
+  assert.ok(commands(lines).includes('projects') && commands(lines).includes('posts'));
+});
+
+test('welcome profile copes with missing data and with more rows than the logo', () => {
+  assert.deepEqual(
+    banner(empty).map((row) => row.slice(36)).filter(Boolean),
+    ['Test Person', '-----------', 'Role: Student', 'Projects: 0', 'Posts: 0']
+  );
+  const many = banner({ ...data, interests: Array.from({ length: 20 }, (_, index) => 'Topic ' + index) });
+  assert.equal(many.length, 28); // 8 fixed rows + 20 interests
+  assert.equal(many[0].slice(36), 'Test Person');
+  // Continuation rows line up under the first interest; rows below the logo keep the same column.
+  assert.equal(many[5].slice(36), 'Interests: Topic 0');
+  assert.equal(many[24], ' '.repeat(36) + '           Topic 19');
 });
 
 test('help lists every command as a clickable command', () => {
