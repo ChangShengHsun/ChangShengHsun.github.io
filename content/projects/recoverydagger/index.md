@@ -8,7 +8,7 @@ links:
   - type: code
     url: https://github.com/NTU-RL2025-02/RecoveryDAgger
   - type: pdf
-    url: https://github.com/NTU-RL2025-02/RecoveryDAgger/blob/main/Report.pdf
+    url: report.pdf
   - type: slides
     url: https://docs.google.com/presentation/d/1ntnNjOAhUretADrlI4ycZFx2BClxzAWE0GYV3HPjv28/edit?usp=sharing
 
