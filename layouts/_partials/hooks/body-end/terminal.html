@@ -1,0 +1,64 @@
+{{/* Terminal mode overlay. The lists are built from the site's own content
+     at build time, so a new post or project appears here without editing this file. */}}
+{{ if .IsHome }}
+  {{ $me := hugo.Data.authors.me }}
+
+  {{ $links := slice }}
+  {{ range $me.links }}
+    {{ $links = $links | append (dict "label" (.label | default (path.Base .icon)) "url" .url) }}
+  {{ end }}
+
+  {{/* Jobs and degrees share one shape, so the terminal prints both the same way. */}}
+  {{ $timeline := dict }}
+  {{ range $key := slice "experience" "education" }}
+    {{ $entries := slice }}
+    {{ range index $me $key }}
+      {{ $end := "present" }}
+      {{ with .end }}{{ $end = time.Format "Jan 2006" . }}{{ end }}
+      {{ $period := printf "%s – %s" (time.Format "Jan 2006" .start) $end }}
+      {{ $entries = $entries | append (dict "period" $period "title" (.role | default .degree) "place" (.org | default .institution)) }}
+    {{ end }}
+    {{ $timeline = merge $timeline (dict $key $entries) }}
+  {{ end }}
+
+  {{ $projects := slice }}
+  {{ range where site.RegularPages "Section" "projects" }}
+    {{ $projects = $projects | append (dict "slug" (path.Base .RelPermalink) "title" .Title "summary" (.Params.summary | default "") "url" .RelPermalink) }}
+  {{ end }}
+
+  {{ $posts := slice }}
+  {{ range (where site.RegularPages "Section" "post").ByDate.Reverse }}
+    {{ $posts = $posts | append (dict "slug" (path.Base .RelPermalink) "title" .Title "date" (.Date.Format "2006-01-02") "url" .RelPermalink) }}
+  {{ end }}
+
+  {{/* Reuse the CV link already configured on the home page's biography block. */}}
+  {{ $cv := "" }}
+  {{ range .Params.sections }}{{ with .content.button.url }}{{ $cv = . }}{{ end }}{{ end }}
+
+  {{ $data := dict
+    "name" $me.name.display
+    "role" $me.role
+    "bio" (replaceRE `\s+` " " (strings.TrimSpace $me.bio))
+    "interests" ($me.interests | default slice)
+    "links" $links
+    "experience" $timeline.experience
+    "education" $timeline.education
+    "experienceUrl" ("experience/" | relURL)
+    "projects" $projects
+    "posts" $posts
+    "cvUrl" ($cv | relURL)
+  }}
+
+  <div id="term" aria-label="Terminal mode">
+    <div id="term-out" role="log"></div>
+    <label class="term-entry">
+      {{ $user := printf "visitor@%s" (urls.Parse site.BaseURL).Hostname }}
+      <span id="term-prompt" data-user="{{ $user }}">{{ $user }}:~$</span>
+      <input id="term-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal command">
+    </label>
+  </div>
+  <script id="term-data" type="application/json">{{ $data | jsonify | safeJS }}</script>
+  {{ with resources.Get "js/terminal.js" | fingerprint }}
+    <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+  {{ end }}
+{{ end }}

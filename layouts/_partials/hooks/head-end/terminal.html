@@ -1,0 +1,46 @@
+{{/* Terminal mode (home page, desktop only). Markup and data live in
+     hooks/body-end/terminal.html, behaviour in assets/js/terminal.js. */}}
+{{ if .IsHome }}
+<script>
+  // Inline in <head> so the mode is known before first paint; otherwise the
+  // normal page would flash before the terminal covers it.
+  (function () {
+    if (!matchMedia('(min-width: 768px) and (hover: hover) and (pointer: fine)').matches) return;
+    var mode = null;
+    try { mode = localStorage.getItem('term-mode'); } catch (error) {}
+    document.documentElement.dataset.term = mode === 'hugo' ? 'off' : 'on';
+  })();
+</script>
+{{/* The theme already loads its fonts from Google Fonts; the file itself is
+     only downloaded when the terminal is actually drawn. */}}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+<style>
+  :root { --term-font: "Share Tech Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  #term { display: none; }
+  html[data-term="on"] { overflow: hidden; }
+  html[data-term="on"] body { background: #0d1117; }
+  /* Hidden, not removed: the page keeps loading underneath, so `hugo` switches instantly. */
+  html[data-term="on"] body > :not(#term) { visibility: hidden; }
+  html[data-term="on"] #term {
+    display: block; position: fixed; inset: 0; z-index: 1000; overflow-y: auto;
+    padding: 2rem; background: #0d1117; color: #c9d1d9;
+    font: 16px/1.7 var(--term-font);
+  }
+  .term-line { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 1.7em; }
+  /* Logo rows: tight line height so the outline joins up, and no wrapping. */
+  .term-art { white-space: pre; line-height: 1.15; min-height: 0; color: #4d8dff; }
+  #term a { color: #58a6ff; text-decoration: underline; }
+  #term button { all: unset; color: #7ee787; cursor: pointer; text-decoration: underline dotted; }
+  #term a:hover, #term button:hover { color: #fff; }
+  #term a:focus-visible, #term button:focus-visible { outline: 1px solid currentColor; outline-offset: 2px; }
+  .term-entry { display: flex; gap: 0.6em; }
+  #term-prompt { color: #7ee787; white-space: nowrap; }
+  #term-input { all: unset; flex: 1; }
+  .term-open {
+    padding: 0.6rem 1rem; border: 1px solid #30363d; border-radius: 0.5rem;
+    background: #0d1117; color: #7ee787; cursor: pointer;
+    font: 14px/1 var(--term-font);
+  }
+  .term-open:hover { border-color: #7ee787; }
+</style>
+{{ end }}
